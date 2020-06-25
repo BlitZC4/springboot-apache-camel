@@ -20,7 +20,8 @@ public class SpringbootApacheCamelApplication extends RouteBuilder {
 //		moveAllFile();
 //		moveSpecificFile();
 //		moveSpecificFileWithBody();
-		fileProcess();
+//		fileProcess();
+		multiFileProcessor();
 		System.out.println("Ended");
 	}
 
@@ -45,4 +46,10 @@ public class SpringbootApacheCamelApplication extends RouteBuilder {
 		}).to("file:C:/Users/Ghufr/OneDrive/Desktop/target1?fileName=record.csv");  //fileName can be used if you want to
 	}																				//store the record in a particular file
 
+	public  void multiFileProcessor(){
+		from("file:C:/Users/Ghufr/OneDrive/Desktop/source1?noop=true").unmarshal().csv().split(body().tokenize(",")).choice()
+				.when(body().contains("closed")).to("file:C:/Users/Ghufr/OneDrive/Desktop/target1?fileName=Closed.csv")
+				.when(body().contains("Pending")).to("file:C:/Users/Ghufr/OneDrive/Desktop/target1?fileName=Pending.csv")
+				.when(body().contains("Interest")).to("file:C:/Users/Ghufr/OneDrive/Desktop/target1?fileName=Interest.csv");
+	}
 }
